@@ -4,6 +4,7 @@ SET(THIRDPARTY_PREFIX
     ${CMAKE_SOURCE_DIR}/3rdparty
     CACHE STRING "Where to place the 3rdparty libraries")
 
+IF(WITH_TRACE)
 SET(STDTRACER_GIT_URL
     https://github.com/stdml/stdtracer.git
     CACHE STRING "URL for clone stdtracer")
@@ -18,7 +19,7 @@ EXTERNALPROJECT_ADD(
     PREFIX ${THIRDPARTY_PREFIX}
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${THIRDPARTY_PREFIX} -DBUILD_TESTS=0
                -DBUILD_EXAMPLES=0 -DCMAKE_CXX_FLAGS=-fPIC)
-
+ENDIF()
 SET(STDTENSOR_GIT_URL
     https://github.com/stdml/stdtensor.git
     CACHE STRING "URL for clone stdtensor")
@@ -42,13 +43,13 @@ INCLUDE_DIRECTORIES(${THIRDPARTY_PREFIX}/include)
 
 # a virtual target for other targets to depend on
 ADD_CUSTOM_TARGET(all-external-projects)
-ADD_DEPENDENCIES(all-external-projects stdtracer-repo stdtensor-repo)
+ADD_DEPENDENCIES(all-external-projects stdtensor-repo)
 
 LINK_DIRECTORIES(${THIRDPARTY_PREFIX}/lib)
 
-ADD_LIBRARY(stdtracer src/trace.cpp)
+# ADD_LIBRARY(stdtracer src/trace.cpp)
 
 FUNCTION(ADD_GLOBAL_DEPS target)
     ADD_DEPENDENCIES(${target} all-external-projects)
-    TARGET_LINK_LIBRARIES(${target} stdtracer)
+    # TARGET_LINK_LIBRARIES(${target} stdtracer)
 ENDFUNCTION()
